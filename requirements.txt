@@ -1,0 +1,7 @@
+anthropic>=0.60
+azure-identity
+streamlit
+pyodbc
+python-dotenv
+requests
+pandas

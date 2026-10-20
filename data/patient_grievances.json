@@ -1,0 +1,20 @@
+{
+  "_comment": "Dummy demo data. Grievance_ID is the Jira issue id; Claim_ID is from dbo.Health_Insurance_Claims.",
+  "patients": [
+    {
+      "Patient_Name": "Srikantan",
+      "Grievances": [
+        {
+          "Grievance_ID": "10121",
+          "Grievance_Key": "DEMO-17",
+          "Claim_ID": "3c5ebe33-1b3a-4e16-8e17-32a201abdbc6"
+        },
+        {
+          "Grievance_ID": "10088",
+          "Grievance_Key": "DEMO-16",
+          "Claim_ID": "4d91adf5-52e2-4cab-b600-b8627314f7b7"
+        }
+      ]
+    }
+  ]
+}
