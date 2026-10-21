@@ -34,6 +34,12 @@ To answer it the agent uses four tools:
 
 The model itself is reached with your Entra identity too (`DefaultAzureCredential`, scope `https://ai.azure.com/.default`). The only secret in the app is the Jira token in `.env`. **All tools run locally in the client app**; neither the model nor the sandbox ever touches Jira, SQL or Outlook.
 
+![Architecture: traditional vs programmatic tool calling](docs/images/architecture-tool-calling.png)
+
+*Left: traditional tool calling, where every tool result goes back through the model (flows 1–5, with the client calling the tools in 2a–4a). Right: programmatic tool calling, where the model hands a script to the sandbox container (2), the sandbox asks the client to run the tools (3–5, with the client calling the tools in 3a–5a), and the model returns only for the final answer (6–7). The colour legend is in the diagram.*
+
+The same architecture in text form:
+
 ```
 ┌──────────────────────────────────────────────┐
 │ Browser — Streamlit UI                       │    "Can you get me the status of my claims?"
