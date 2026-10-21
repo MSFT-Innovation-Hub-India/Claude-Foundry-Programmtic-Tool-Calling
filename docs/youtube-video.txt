@@ -1,0 +1,53 @@
+TITLE (pick one; all under YouTube's 100-character limit)
+
+Main:
+Claude Programmatic Tool Calling on Microsoft Foundry: Half the Tokens, Same Answers
+
+Alternates:
+Stop Paying Your AI Agent to Pass Messages | Claude on Microsoft Foundry Demo
+Cut Agentic AI Token Costs: Programmatic Tool Calling + Prompt Caching (Live Demo)
+
+
+DESCRIPTION (paste as is)
+
+Is your AI agent overpaying for tokens? In this demo I run the same insurance-claims question through an agent two ways, side by side, and show exactly where the tokens go: traditional tool calling vs. Claude's programmatic tool calling, with prompt caching on top.
+
+In a traditional agent, the model sits in the middle of every step. Each tool result flows back through it, and each round trip re-reads the whole conversation. With programmatic tool calling, Claude writes one short program that runs in a sandbox container. The sandbox asks the client application to call the real tools, and the model only comes back at the end to compose the answer from a small summary.
+
+WHAT YOU WILL SEE
+
+- A claims agent: a customer asks for the status of their insurance claims.
+- The data sources: claims in Azure SQL Database (Microsoft Entra authentication), grievances in Jira Cloud (API token), and email through WorkIQ in Microsoft 365 (your signed-in identity).
+- The business rule: for denied claims whose grievance has nobody assigned, the agent sends an escalation email through WorkIQ, then replies with a consolidated view of every claim.
+- Two panels, one per approach, each with the final answer, a per-step token breakdown (input, reasoning, output, cache read and write), the tool calls made, and the script Claude wrote for the sandbox.
+- Prompt caching switched on, with the share of input served from cache shown for each run.
+
+WHAT WE FOUND (single runs; models vary from run to run)
+
+- With Jira returning its full record, the traditional approach used about 27,500 tokens in 4 model calls. Programmatic tool calling used about 14,300 tokens in 2 model calls, with the same answers.
+- It is not free: the sandbox instructions add roughly 3,700 tokens to every model call. With only 1 or 2 tool calls, or small payloads, the approaches come out about even.
+- Prompt caching does not reduce the token count, it reduces the price of repeated input. On a repeat run, about 65% (traditional) and 88% (programmatic) of the input came from the cache. At typical list-price ratios that is an estimated 40 to 46 percent lower cost. These ratios are assumptions, so check your own pricing.
+
+GOOD TO KNOW
+
+- On Microsoft Foundry, programmatic tool calling is currently supported for Claude deployments hosted by Anthropic (the deployment is created in Foundry; the model is hosted by Anthropic). Azure-hosted Claude deployments do not support it yet. This demo uses Claude Haiku 5.5.
+- For Foundry native models and solutions, look at CodeAct in Microsoft Agent Framework. It is still in alpha, so it is not ready for production-scale deployments.
+- The app calls the Claude Messages API through the Anthropic SDK for Foundry, authenticated with Microsoft Entra ID.
+
+LINKS
+
+Demo source code (GitHub):
+https://github.com/MSFT-Innovation-Hub-India/Claude-Foundry-Programmtic-Tool-Calling
+
+Programmatic tool calling, Claude Platform Docs:
+https://platform.claude.com/docs/en/agents-and-tools/tool-use/programmatic-tool-calling#how-programmatic-tool-calling-works
+
+Features overview (tool infrastructure), Claude Platform Docs:
+https://platform.claude.com/docs/en/build-with-claude/overview#tool-infrastructure
+
+CodeAct in Agent Framework: Faster Agents with Fewer Model Turns:
+https://devblogs.microsoft.com/agent-framework/codeact-with-hyperlight/
+
+If you run agents in production, try this on one high-volume agent: count its tool calls, check the size of the results, and measure tokens before and after. I would love to hear what you find in the comments.
+
+#TokenEconomics #AgenticAI #ClaudeAI #MicrosoftFoundry #ProgrammaticToolCalling #PromptCaching #AIAgents #Anthropic #AzureAI #GenerativeAI #AIStrategy #CostOptimization
