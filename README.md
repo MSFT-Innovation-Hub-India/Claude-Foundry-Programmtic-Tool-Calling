@@ -164,10 +164,21 @@ Observed in this demo (single runs; the model varies run to run):
 - Needs a Claude deployment **Hosted on Anthropic** (not *Hosted on Azure*; those return `400 code_execution not supported`) of a supported model. This demo uses `claude-haiku-5-5`.
 - A pending tool call times out after about 4 minutes, and idle containers expire after about 5. Return results promptly.
 
-### How it is enabled in the code
-[`core/agents.py`](core/agents.py) adds the `code_execution` tool, and [`core/tools.py`](core/tools.py) marks each tool as callable from it:
+### How the request differs from a normal tool-calling request
+Same endpoint, model, authentication, `max_tokens` and `cache_control`. Four things change (see [`core/agents.py`](core/agents.py) and [`core/tools.py`](core/tools.py)):
+
+| | Traditional request | Programmatic request |
+| --- | --- | --- |
+| **Tools list** | Your tool schemas only | The same schemas **plus** `{"type": "code_execution_20260120", "name": "code_execution"}` |
+| **Each of your tools** | Plain definition | Carries `"allowed_callers": ["code_execution_20260120"]`, so it appears in the script as an async function |
+| **Follow-up requests** | Just the messages | Also send the **`container`** id returned by the first response; the API rejects a resume without it |
+| **System prompt** | The task instructions | Plus a short instruction (our own text, not an API field): do the whole job in one script, use `asyncio.gather` for independent calls, print only a compact summary |
 
 ```python
+# Traditional
+tools = tool_definitions                      # your 4 tools
+
+# Programmatic
 tools = [
     {"type": "code_execution_20260120", "name": "code_execution"},
     *[{**tool, "allowed_callers": ["code_execution_20260120"]} for tool in tool_definitions],
@@ -176,7 +187,17 @@ response = client.messages.create(model=deployment, system=system, tools=tools,
                                   messages=messages, container=container_id)  # container_id once known
 ```
 
-While the sandbox is paused, the response has `stop_reason == "tool_use"`. The client runs each tool, appends the `tool_result` blocks to the messages and calls again with the same `container` id, until `stop_reason == "end_turn"`.
+What comes back also differs:
+
+| | Traditional response | Programmatic response |
+| --- | --- | --- |
+| Tool request | `tool_use` block, `caller: direct` | `tool_use` block whose `caller` is `code_execution_20260120` (it came from the sandbox) |
+| The script | none | a `server_tool_use` block containing the Python code |
+| Script output | none | a `code_execution_tool_result` block |
+| `stop_reason` | `tool_use`, then `end_turn` | `tool_use` each time the sandbox pauses, then `end_turn` |
+| Billed tokens | every response | only the first and last; the pause responses report 0 |
+
+Your reply has the same shape in both cases: `tool_result` blocks with the matching `tool_use_id`, with the assistant's previous content (including the `server_tool_use` block) appended to the messages unchanged. The client keeps calling until `stop_reason == "end_turn"`. The deployment must be Hosted on Anthropic, otherwise the request fails with `400 code_execution not supported`.
 
 ### The script the model wrote
 This is the code Claude generated and ran in the sandbox for the question above. The same code is shown in the app under **"Script Claude wrote and ran in the sandbox"**.
