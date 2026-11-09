@@ -1,0 +1,15 @@
+title: Claude Programmatic Tool Calling on Microsoft Foundry
+description: Cut token costs in agentic AI. A working insurance-claims agent comparing traditional and programmatic tool calling, with prompt caching, using Claude on Microsoft Foundry.
+url: https://msft-innovation-hub-india.github.io
+baseurl: /Claude-Foundry-Programmtic-Tool-Calling
+lang: en
+theme: jekyll-theme-minimal
+logo: /images/video-thumbnail.jpg
+github:
+  repository_url: https://github.com/MSFT-Innovation-Hub-India/Claude-Foundry-Programmtic-Tool-Calling
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+exclude:
+  - linkedin-article.md
+  - youtube-video.txt

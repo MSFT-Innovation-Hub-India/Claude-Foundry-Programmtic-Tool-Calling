@@ -7,6 +7,19 @@ A Streamlit demo that answers the same question twice, with the same four tools,
 
 **Prompt caching** is switched on for both, so you can also see how much of the repeated input is served from cache.
 
+The scenario is an insurance-claims agent built with **Claude on Microsoft Foundry** (Azure AI Foundry), using Azure SQL, Jira Cloud and Microsoft 365 (WorkIQ) as tool backends. It is a hands-on reference for **reducing token cost in agentic AI**.
+
+**Project page:** <https://msft-innovation-hub-india.github.io/Claude-Foundry-Programmtic-Tool-Calling/>
+
+## Read the article and watch the demo
+
+- **Article:** [The Token Economics of Agentic AI: Programmatic Tool Calling and Prompt Caching in Practice (LinkedIn)](https://www.linkedin.com/pulse/token-economics-agentic-ai-programmatic-tool-calling-prompt-sankaran-pldqc/)
+- **Video (click the image to watch on YouTube):**
+
+[![Watch the demo: Claude programmatic tool calling on Microsoft Foundry, traditional vs programmatic token usage side by side](docs/images/video-thumbnail.jpg)](https://youtu.be/Hb9vx986dTc)
+
+*The demo UI: the same claims question answered with traditional tool calling (left) and programmatic tool calling (right), with per-step token usage and prompt-cache reads.*
+
 ---
 
 ## Availability on Microsoft Foundry: read this first
